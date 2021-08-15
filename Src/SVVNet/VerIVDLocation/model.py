@@ -37,14 +37,8 @@ class SpatialConfiguration(nn.Module):
 
     def forward(self, x):
         output = self.AveragePooling(x)
-        print('AveragePooling_output shape')
-        print(output.shape)
         output = self.DepthwiseConv(output)
-        print('DepthwiseConv_output shape')
-        print(output.shape)
         output = self.PointwiseConv(output)
-        print('PointwiseConv_output shape')
-        print(output.shape)
 
         return output
 
@@ -94,17 +88,9 @@ class BaseNet(nn.Module):
 
     def forward(self, x):
         Appearance_output = self.appearance(x)
-        print('Appearance_output shape')
-        print(Appearance_output.shape)
         SpatialConfiguration_output = self.spatialconfiguration(Appearance_output)
-        print('SpatialConfiguration_output shape')
-        print(SpatialConfiguration_output.shape)
         UpSampling_output = self.upsampling(SpatialConfiguration_output)
-        print('UpSampling_output shape')
-        print(UpSampling_output.shape)
         Combination = Appearance_output * UpSampling_output
-        print('Combination shape')
-        print(Combination.shape)
 
         return Combination
 
@@ -117,14 +103,6 @@ class Model(nn.Module):
         self.conv_out = nn.Conv3d(5, out_ch, kernel_size=1, padding=0, bias=True)
 
     def forward(self, x):
-        print(self.in_ch)
-        print(self.out_ch)
-        print('input shape:')
-        print(x.shape)
-        output = self.net(x)
-        print('output shape:')
-        print(output.shape)
+        output = self.net(x) #input (2,2,D,H,W)
         output = self.conv_out(output)
-        print('output shape:')
-        print(output.shape)
         return output
