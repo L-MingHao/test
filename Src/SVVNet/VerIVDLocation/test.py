@@ -288,6 +288,6 @@ if __name__ == "__main__":
     # print('\n\n# Vertebrae prediction completed !')
     #print('\n\n# Start evaluation !')
     #Dice_score = evaluate_Vertebrae(prediction_dir=os.path.join(trainer.setting.output_dir, 'Prediction'),
-                                    gt_dir=path)
+                                    #gt_dir=path)
 
     #print('\n\nDice score is: ' + str(Dice_score))

@@ -411,10 +411,15 @@ class NetworkTrainer:
 
         # If do not do so, the states of optimizer will always in cpu
         # This for Adam
-        if type(self.setting.optimizer).__name__ == 'Adam' or type(self.setting.optimizer).__name__ == 'SGD':
+        if type(self.setting.optimizer).__name__ == 'Adam':
             for key in self.setting.optimizer.state.items():
                 key[1]['exp_avg'] = key[1]['exp_avg'].to(self.setting.device)
                 key[1]['exp_avg_sq'] = key[1]['exp_avg_sq'].to(self.setting.device)
                 key[1]['max_exp_avg_sq'] = key[1]['max_exp_avg_sq'].to(self.setting.device)
+
+        # This is for SGD
+        elif type(self.setting.optimizer).__name__ == 'SGD':
+            for key in self.setting.optimizer.state.items():
+                key[1]['momentum_buffer'] = key[1]['momentum_buffer'].to(self.setting.device)
 
         self.print_log_to_file('==> Init trainer from ' + ckpt_file + ' successfully! \n', 'a')
