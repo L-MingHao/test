@@ -106,7 +106,7 @@ def train_transform(list_images, Mask):
     return list_images
 
 
-def val_transform(list_images):
+def val_transform(list_images, Mask):
     list_images = to_tensor(list_images)
     return list_images
 

@@ -40,7 +40,7 @@ def online_evaluation(trainer):
             list_val_loss.append(val_loss)
 
     try:
-        trainer.print_log_to_file('===============================================> mean val DSC: %12.12f'
+        trainer.print_log_to_file('===============================================> mean val MSE: %12.12f'
                                   % (np.mean(list_val_loss)), 'a')
     except:
         pass
