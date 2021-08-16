@@ -264,6 +264,8 @@ class NetworkTrainer:
 
             # List_loader_output[0] default as the input
             input_ = case[0]  # tensor: (batch_size, C, D, H, W)
+            print('input_')
+            print(input_.shape)
             target = case[1:]  # tensor: (b, C, D, H, W)
 
             # Record time of preparing data

@@ -50,7 +50,7 @@ def read_data(case_dir):
     return dict_images
 
 
-def pre_processing(dict_images):
+def pre_processing(dict_images, phase):
     MR = dict_images['MR']
     MR = np.clip(MR / 2048, a_min=0, a_max=1)
     Mask = dict_images['Mask']
@@ -78,11 +78,14 @@ def pre_processing(dict_images):
         heatmap = crop(heatmap, start=start, end=start + 12, axis='z')
         Mask = crop(Mask, start=start, end=start + 12, axis='z')
 
+    list_images = [MR, heatmap]
+    transform = {'train': train_transform, 'val': val_transform}[phase]
+    list_images = transform(list_images, Mask)
 
-    return [MR, heatmap]
+    return list_images
 
 
-def train_transform(list_images):
+def train_transform(list_images, Mask):
 
     # Random flip along z and x axis
     list_images = random_flip_3d(list_images, list_axis=(0, 2), p=0.5)
@@ -94,9 +97,9 @@ def train_transform(list_images):
                                               list_interp=(cv2.INTER_NEAREST, cv2.INTER_NEAREST, cv2.INTER_NEAREST),
                                               p=0.3)
 
-    list_images = random_translate(list_images,  # [MR, spine_heatmap]
+    list_images = random_translate(list_images, Mask,  # [MR, spine_heatmap, Mask]
                                    p=0.5,
-                                   max_shift=3)
+                                   max_shift=1)
 
     # To torch tensor
     list_images = to_tensor(list_images)
@@ -112,8 +115,7 @@ class IVDLocationDataset(data.Dataset):
     def __init__(self, catalogue, num_samples_per_epoch, phase, path):
 
         self.num_samples_per_epoch = num_samples_per_epoch
-        self.transform = {'train': train_transform, 'val': val_transform}[phase]
-
+        self.phase = phase
         self.cases = catalogue[phase].dropna()
 
         self.list_case_id = [os.path.join(path, self.cases[i]) for i in range(len(self.cases))]
@@ -129,9 +131,8 @@ class IVDLocationDataset(data.Dataset):
             case_id = self.list_case_id[new_index_]
 
         dict_images = read_data(case_id)
-        list_images = pre_processing(dict_images)
+        list_images = pre_processing(dict_images, self.phase)
 
-        list_images = self.transform(list_images)
         return list_images  # [MR, target_heatmap]
 
     def __len__(self):

@@ -103,6 +103,6 @@ class Model(nn.Module):
         self.conv_out = nn.Conv3d(5, out_ch, kernel_size=1, padding=0, bias=True)
 
     def forward(self, x):
-        output = self.net(x) #input (2,2,D,H,W)
+        output = self.net(x) #input (2,1,D,H,W)
         output = self.conv_out(output)
         return output

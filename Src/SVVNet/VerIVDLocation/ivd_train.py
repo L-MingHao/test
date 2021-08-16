@@ -14,7 +14,7 @@ if os.path.abspath('../..') not in sys.path:
 import argparse
 from utils.utils import AverageMeter, str2bool
 from utils.tools import csv_to_catalogue
-from DataLoader.dataloader_Vertebraesegmentation import get_loader
+from DataLoader.dataloader_IVDlocation import get_loader
 from NetworkTrainer.network_trainer import NetworkTrainer
 from model import Model
 from online_evaluation import online_evaluation
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     # setting.network is an object
     if args.model_type == 'SC-Net':
-        trainer.setting.network = Model(in_ch=2, out_ch=args.num_classes)
+        trainer.setting.network = Model(in_ch=1, out_ch=args.num_classes)
         print('Loading SC-Net !')
 
     trainer.setting.max_iter = args.max_iter
