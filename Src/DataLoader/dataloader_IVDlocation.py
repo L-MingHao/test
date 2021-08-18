@@ -57,11 +57,11 @@ def pre_processing(dict_images, phase):
     _, D, H, W = MR.shape
 
     heatmap_generator = HeatmapGenerator(image_size=(D, H, W),
-                                         sigma=2.,
-                                         scale_factor=1.,
+                                         sigma=3.,
+                                         scale_factor=3.,
                                          normalize=True,
-                                         size_sigma_factor=8,
-                                         sigma_scale_factor=2,
+                                         size_sigma_factor=16,
+                                         sigma_scale_factor=4,
                                          dtype=np.float32)
     list_landmarks = dict_images['list_landmarks']
 

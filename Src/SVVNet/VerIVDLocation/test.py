@@ -204,7 +204,7 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
                 if True in np.isnan(landmark):
 
                     pred_ = torch.zeros(1, C, D, H, W).to(trainer.setting.device)
-                    temp = torch.cat((temp, pred_), dim=1)
+
 
                 else:
                     # heatmap = heatmap_generator.generate_heatmap(landmark)[np.newaxis, :, :, :]  # (1, D, H, W)
@@ -216,21 +216,21 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
 
                         input_ = np.stack((input_[:, :12, :, :], input_[:, -12:, :, :]), axis=0)  # (2, 1, D, H, W)
                         input_ = torch.from_numpy(input_).to(trainer.setting.device)
-                        pred_ = test_time_augmentation(trainer, input_, TTA_mode)
+                        # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
+                        pred_ = trainer.setting.network(input_)
                         pred_ = post_processing(pred_, D, device=trainer.setting.device)  # (1, 1, D, H, W)
-                        pred_ = nn.Softmax(dim=1)(pred_)
+                        pred_ = nn.Tanh()(pred_)
 
                     else:
                         # input_, patch, pad = crop_to_center(input_, landmark=landmark, dsize=dsize)
                         input_ = torch.from_numpy(input_).unsqueeze(0).to(trainer.setting.device)
-                        pred_ = test_time_augmentation(trainer, input_, TTA_mode)
-                        pred_ = nn.Softmax(dim=1)(pred_)
+                        pred_ = trainer.setting.network(input_)
+                        # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
+                        pred_ = nn.Tanh()(pred_)
 
-                    temp = torch.cat((temp, pred_), dim=1)
+                    temp += pred_[0]
 
-            pred_heatmap = torch.argmax(temp, dim = 1) # (1, D, H, W)
-            pred_heatmap = pred_heatmap.cpu().numpy()
-            pred_heatmap = np.where(pred_heatmap > 0, pred_heatmap - 1, 0)
+            pred_heatmap = temp.cpu().numpy()
 
             # Save prediction to nii image
             template_nii = sitk.ReadImage(case_dir + '/MR_512.nii.gz')

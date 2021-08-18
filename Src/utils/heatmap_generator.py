@@ -109,7 +109,7 @@ class HeatmapGenerator:
 
             squared_distances = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff
 
-            cropped_heatmap = scale * np.exp(-squared_distances / (2 * math.pow(sigma, 2)))
+            cropped_heatmap = scale * np.exp(-squared_distances / (2 * math.pow(sigma, 2))) # sigma^2
 
             heatmap[region_start[0]:region_end[0], region_start[1]:region_end[1], region_start[2]:region_end[2]] \
                 = cropped_heatmap[:, :, :]

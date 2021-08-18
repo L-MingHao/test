@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="606ef84d-c084-425c-a574-a4a3b655e587" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/DataAugmentation/augmentation_spinelocation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/DataAugmentation/augmentation_Spinelocation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/DataLoader/dataloader_spinelocation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/DataLoader/dataloader_Spinelocation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/DataLoader/dataloader_verlocation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/DataLoader/dataloader_Verlocation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/NetworkTrainer/network_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/NetworkTrainer/network_trainer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/SVVNet/SpineLocation/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/SVVNet/SpineLocation/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/SVVNet/SpineLocation/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/SVVNet/SpineLocation/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Src/SVVNet/VertebraeLocation/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/SVVNet/Ver&amp;IVDLocation/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Src/SVVNet/VerIVDLocation/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/SVVNet/VerIVDLocation/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Src/test4.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../Src/test4.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/train_verLocation.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/train_verLocation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +52,7 @@
       <updated>1626430878456</updated>
       <workItem from="1626430880883" duration="12751000" />
       <workItem from="1627277971060" duration="56742000" />
+      <workItem from="1629164766611" duration="3659000" />
     </task>
     <servers />
   </component>
