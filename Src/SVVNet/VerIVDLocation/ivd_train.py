@@ -93,7 +93,7 @@ if __name__ == '__main__':
     trainer.setting.online_evaluation_function_val = online_evaluation
 
     params = filter(lambda p: p.requires_grad, trainer.setting.network.parameters())
-    trainer.set_optimizer(optimizer_type='SGD',
+    trainer.set_optimizer(optimizer_type='Adam',
                           args={
                               'lr': 3e-4,
                               'weight_decay': 1e-4,

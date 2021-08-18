@@ -189,7 +189,7 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
             list_IVD_landmarks = list_images[1]
 
             C, D, H, W = MR.shape
-            temp = torch.zeros(1, C, D, H, W).to(trainer.setting.device)
+            temp = torch.zeros(C, D, H, W).to(trainer.setting.device)
             # all pred_VertebraeMask will be insert into this tensor
             # pred_Mask = torch.zeros(C, D, H, W).to(trainer.setting.device)
             heatmap_generator = HeatmapGenerator(image_size=(D, H, W),
@@ -203,7 +203,7 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
             for index, landmark in enumerate(list_IVD_landmarks):
                 if True in np.isnan(landmark):
 
-                    pred_ = torch.zeros(1, C, D, H, W).to(trainer.setting.device)
+                    pred_ = torch.zeros(C, D, H, W).to(trainer.setting.device)
 
 
                 else:
