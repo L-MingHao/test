@@ -33,7 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('--max_iter',  type=int, default=50000,
                         help='training iterations(default: 50000)')
     # added by Chenchen Hu
-    parser.add_argument('--num_classes', type=int, default=1)
+    parser.add_argument('--num_classes', type=int, default=9)
 
     parser.add_argument('--catalogue', type=int, default=0)
     parser.add_argument('--latest', type=int, default=0,

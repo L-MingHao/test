@@ -66,13 +66,19 @@ def pre_processing(dict_images, phase):
                                          sigma_scale_factor=5, )
 
     list_landmarks = dict_images['list_landmarks']
+    point_heatmap1 = heatmap_generator.generate_heatmap(landmark=list_landmarks[10])[np.newaxis, :, :, :]
+    for index in range(11, 19):
+        if True in np.isnan(list_landmarks[index]):
+            point_heatmap2 = np.zeros(1, D, H, W)
 
-    index = random.randint(10, 18)
-    while True in np.isnan(list_landmarks[index]):
-        index = random.randint(10, 18)
+        else:
+            point_heatmap2 = heatmap_generator.generate_heatmap(landmark=list_landmarks[index])[np.newaxis, :, :, :]
+        point_heatmap1 = np.concatenate((point_heatmap1, point_heatmap2))
 
-    heatmap = heatmap_generator.generate_heatmap(landmark=list_landmarks[index])[np.newaxis, :, :, :]
-    Mask = np.where(Mask == index + 1, 1, 0)  # just IVD
+    heatmap = point_heatmap1
+
+
+    Mask = np.where(Mask > 10, 1, 0)  # just IVD
 
     if D > 12:
         start = random.choice([i for i in range(D - 12 + 1)])
@@ -90,7 +96,7 @@ def pre_processing(dict_images, phase):
 def train_transform(list_images, Mask):
 
     # Random flip along z and x axis
-    list_images = random_flip_3d(list_images, list_axis=(0, 2), p=0.5)
+    #list_images = random_flip_3d(list_images, list_axis=(0, 2), p=0.5)
 
     # Random rotation
     list_images = random_rotate_around_z_axis(list_images,
@@ -99,9 +105,9 @@ def train_transform(list_images, Mask):
                                               list_interp=(cv2.INTER_NEAREST, cv2.INTER_NEAREST, cv2.INTER_NEAREST),
                                               p=0.3)
 
-    list_images = random_translate(list_images, Mask,  # [MR, spine_heatmap, Mask]
-                                   p=0.5,
-                                   max_shift=1)
+    #list_images = random_translate(list_images, Mask,  # [MR, spine_heatmap, Mask]
+                                   #p=0.5,
+                                   #max_shift=1)
 
     # To torch tensor
     list_images = to_tensor(list_images)

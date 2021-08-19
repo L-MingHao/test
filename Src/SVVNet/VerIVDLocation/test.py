@@ -218,7 +218,7 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
                         input_ = torch.from_numpy(input_).to(trainer.setting.device)
                         # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
                         pred_ = trainer.setting.network(input_)
-                        pred_ = post_processing(pred_, D, device=trainer.setting.device)  # (1, 1, D, H, W)
+                        pred_ = post_processing(pred_, D, device=trainer.setting.device)  # (1, 9, D, H, W)
                         pred_ = nn.Tanh()(pred_)
 
                     else:
@@ -228,9 +228,9 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
                         # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
                         pred_ = nn.Tanh()(pred_)
 
-                    temp += pred_[0]
+                    pred_ = torch.argmax(pred_, dim=1)
 
-            pred_heatmap = temp.cpu().numpy()
+            pred_heatmap = pred_.cpu().numpy()
 
             # Save prediction to nii image
             template_nii = sitk.ReadImage(case_dir + '/MR_512.nii.gz')
@@ -264,7 +264,7 @@ if __name__ == "__main__":
     trainer.setting.output_dir = '../../../Output/IVD_Location'
 
     if args.model_type == 'SC-Net':
-        trainer.setting.network = Model(in_ch=1, out_ch=1)
+        trainer.setting.network = Model(in_ch=1, out_ch=9)
         print('Loading Unet_base !')
 
     # Load model weights

@@ -32,8 +32,8 @@ class SpatialConfiguration(nn.Module):
     def __init__(self, in_ch, out_ch):
         super(SpatialConfiguration, self).__init__()
         self.AveragePooling = nn.AvgPool3d(3, stride=2, padding=1)
-        self.DepthwiseConv = SingleConv(5, 5, kernel_size=3, stride=1, padding=1, groups=5)
-        self.PointwiseConv = SingleConv(5, 5, kernel_size=1, stride=1, padding=0, groups=1)
+        self.DepthwiseConv = SingleConv(9, 9, kernel_size=3, stride=1, padding=1, groups=9)
+        self.PointwiseConv = SingleConv(9, 9, kernel_size=1, stride=1, padding=0, groups=1)
 
     def forward(self, x):
         output = self.AveragePooling(x)
@@ -49,7 +49,7 @@ class Appearance(nn.Module):
         super(Appearance, self).__init__()
         self.CovOnly = nn.Sequential(
             SingleConv(in_ch, 32, kernel_size=3, stride=1, padding=1, groups=1),
-            SingleConv(32, 5, kernel_size=3, stride=1, padding=1, groups=1)
+            SingleConv(32, out_ch, kernel_size=3, stride=1, padding=1, groups=1)
         )
 
     def forward(self, x):
@@ -100,9 +100,9 @@ class Model(nn.Module):
         self.in_ch = in_ch
         self.out_ch = out_ch
         self.net = BaseNet(in_ch, out_ch)
-        self.conv_out = nn.Conv3d(5, out_ch, kernel_size=1, padding=0, bias=True)
+        self.conv_out = nn.Conv3d(9, out_ch, kernel_size=1, padding=0, bias=True)
 
     def forward(self, x):
         output = self.net(x) #input (2,1,D,H,W)
         output = self.conv_out(output)
-        return output
+        return output # (2,9,D,H,W)
