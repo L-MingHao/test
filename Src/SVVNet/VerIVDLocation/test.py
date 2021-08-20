@@ -200,37 +200,29 @@ def inference(trainer, list_case_dirs, save_path, do_TTA=False):
                                                  sigma_scale_factor=2,
                                                  dtype=np.float32)
 
-            for index, landmark in enumerate(list_IVD_landmarks):
-                if True in np.isnan(landmark):
+            # heatmap = heatmap_generator.generate_heatmap(landmark)[np.newaxis, :, :, :]  # (1, D, H, W)
+            # heatmap = torch.from_numpy(heatmap)
+            input_ = MR  # (1, D, H, W)
 
-                    pred_ = torch.zeros(C, D, H, W).to(trainer.setting.device)
+            if D > 12:
+                input_ = np.stack((input_[:, :12, :, :], input_[:, -12:, :, :]), axis=0)  # (2, 1, D, H, W)
+                input_ = torch.from_numpy(input_).to(trainer.setting.device)
+                # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
+                pred_ = trainer.setting.network(input_)
+                pred_ = post_processing(pred_, D, device=trainer.setting.device)  # (1, 9, D, H, W)
+                pred_ = nn.Tanh()(pred_)
 
+            else:
+                # input_, patch, pad = crop_to_center(input_, landmark=landmark, dsize=dsize)
+                input_ = torch.from_numpy(input_).unsqueeze(0).to(trainer.setting.device)
+                pred_ = trainer.setting.network(input_)
+                # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
+                pred_ = nn.Tanh()(pred_)
 
-                else:
-                    # heatmap = heatmap_generator.generate_heatmap(landmark)[np.newaxis, :, :, :]  # (1, D, H, W)
-                    # heatmap = torch.from_numpy(heatmap)
-                    input_ = MR  # (1, D, H, W)
+            for index in range(len(pred_[0])):
+                temp += pred_[0][index]
 
-                    if D > 12:
-                        # input_, patch, pad = crop_to_center(input_, landmark=landmark, dsize=dsize)
-
-                        input_ = np.stack((input_[:, :12, :, :], input_[:, -12:, :, :]), axis=0)  # (2, 1, D, H, W)
-                        input_ = torch.from_numpy(input_).to(trainer.setting.device)
-                        # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
-                        pred_ = trainer.setting.network(input_)
-                        pred_ = post_processing(pred_, D, device=trainer.setting.device)  # (1, 9, D, H, W)
-                        pred_ = nn.Tanh()(pred_)
-
-                    else:
-                        # input_, patch, pad = crop_to_center(input_, landmark=landmark, dsize=dsize)
-                        input_ = torch.from_numpy(input_).unsqueeze(0).to(trainer.setting.device)
-                        pred_ = trainer.setting.network(input_)
-                        # pred_ = test_time_augmentation(trainer, input_, TTA_mode)
-                        pred_ = nn.Tanh()(pred_)
-
-                    pred_ = torch.argmax(pred_, dim=1)
-
-            pred_heatmap = pred_.cpu().numpy()
+            pred_heatmap = temp.cpu().numpy()
 
             # Save prediction to nii image
             template_nii = sitk.ReadImage(case_dir + '/MR_512.nii.gz')
