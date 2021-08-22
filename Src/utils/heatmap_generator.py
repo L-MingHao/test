@@ -114,6 +114,9 @@ class HeatmapGenerator:
             heatmap[region_start[0]:region_end[0], region_start[1]:region_end[1], region_start[2]:region_end[2]] \
                 = cropped_heatmap[:, :, :]
 
+            heatmap = ndimage.gaussian_filter(heatmap,
+                                              sigma=self.spine_heatmap_sigma) * self.spine_heatmap_scale_factor
+
         return heatmap
 
     # return one-hot style heatmaps of landmarks for a given image
@@ -133,8 +136,10 @@ class HeatmapGenerator:
     def generate_spine_heatmap(self, list_landmarks):
         """Generates a 4d numpy array image of spine heatmap"""
         landmark_heatmaps = self.generate_heatmaps(list_landmarks)
-        landmark_heatmaps = np.sum(landmark_heatmaps, axis=0)
-        spine_heatmap = ndimage.gaussian_filter(landmark_heatmaps,
-                                                sigma=self.spine_heatmap_sigma) * self.spine_heatmap_scale_factor
-        return spine_heatmap[np.newaxis, :, :, :]
+        #landmark_heatmaps = np.sum(landmark_heatmaps, axis=0)
+        #spine_heatmap = ndimage.gaussian_filter(landmark_heatmaps,
+                                                #=self.spine_heatmap_sigma) * self.spine_heatmap_scale_factor
+        return landmark_heatmaps[np.newaxis, :, :, :]
+
+
 
