@@ -95,7 +95,7 @@ if __name__ == '__main__':
     params = filter(lambda p: p.requires_grad, trainer.setting.network.parameters())
     trainer.set_optimizer(optimizer_type='Adam',
                           args={
-                              'lr': 3e-4,
+                              'lr': 1e-4,
                               'weight_decay': 1e-4,
                               'momentum': 0.9,
                               'nesterov': False

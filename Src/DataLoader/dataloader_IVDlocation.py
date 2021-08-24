@@ -57,13 +57,14 @@ def pre_processing(dict_images, phase):
     _, D, H, W = MR.shape
 
     heatmap_generator = HeatmapGenerator(image_size=(D, H, W),  # (12, 512, 512)
-                                         sigma=3.,
+                                         sigma=2.,
                                          spine_heatmap_sigma=3,
-                                         scale_factor=1.,
-                                         spine_heatmap_scale_factor=20,
+                                         scale_factor=2.,
+                                         spine_heatmap_scale_factor=25,
                                          normalize=True,
-                                         size_sigma_factor=16,
-                                         sigma_scale_factor=4, )
+                                         size_sigma_factor=8,
+                                         sigma_scale_factor=2, )
+
 
     list_landmarks = dict_images['list_landmarks']
     point_heatmap1 = heatmap_generator.generate_heatmap(landmark=list_landmarks[10])[np.newaxis, :, :, :]
